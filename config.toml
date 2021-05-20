@@ -42,8 +42,8 @@ preserveTaxonomyNames = true
 [params]
     since = 2020
     author = "meow"
-    avatar = "/images/Nyanpasu.png"
-    # subtitle = "您要来一杯 cappuccino 还是 kafuuchino ?"
+    avatar = "/images/inspectocat1.jpg"
+    subtitle = "Freedom is not free!!"
     cdn_url = ""           # Base CDN URL
     home_mode = "" # post or other
 
