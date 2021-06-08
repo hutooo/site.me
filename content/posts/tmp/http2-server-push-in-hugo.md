@@ -9,7 +9,7 @@ slug: "http2-server-push-in-hugo"
 aliases: []
 author: bep
 images:
-- images/gohugoio-card-1.png
+- images/chino.png
 ---
 
 **Netlify** recently announced support for [HTTP/2 server push](https://www.netlify.com/blog/2017/07/18/http/2-server-push-on-netlify/), and we have now added it to the **gohugo.io** sites for the main `CSS` and `JS` bundles, along with server-side 301 redirect support. 

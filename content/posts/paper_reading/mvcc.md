@@ -2,7 +2,7 @@
 title: An Empirical Evaluation of In-Memory Multi-Version Concurrency Control
 author: ash
 tags: ["MVCC", "DataBase", "Concurrency", "Paper"]
-categories: ["论文阅读"]
+categories: ["阅读与感悟"]
 date: 2021-04-21T14:46:02+08:00
 ---
 

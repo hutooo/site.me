@@ -2,7 +2,7 @@
 title: Neovim + Lua = init.lua
 author: ash
 tags: ["editor", "neovim", "lua"]
-categories: ["文本编辑"]
+categories: ["小小编辑器装着大道理"]
 date: 2021-05-05T11:58:12+08:00
 ---
 

@@ -2,7 +2,7 @@
 title: 字符集与比较规则
 author: ash
 tags: ["MySQL", "SQL", "DataBase"]
-categories: ["SQL探秘", "Hacking"]
+categories: ["数据库探秘", "Hacking"]
 date: 2020-07-22T16:49:48+08:00
 ---
 

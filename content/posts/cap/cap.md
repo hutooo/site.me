@@ -1,8 +1,8 @@
 ---
 title: CP or AP?
 author: ash
-tags: ["CAP", "分布式锁"]
-categories: ["CAP"]
+tags: ["CAP", "分布式系统"]
+categories: ["分布式系统"]
 date: 2021-02-08T17:03:10+08:00
 ---
 

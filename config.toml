@@ -41,10 +41,12 @@ preserveTaxonomyNames = true
 
 [params]
     since = 2020
-    author = "meow"
-    avatar = "/images/inspectocat1.jpg"
-    subtitle = "Freedom is not free!!"
-    cdn_url = ""           # Base CDN URL
+    author = "ash"
+    # avatar = "/images/chino.png"
+    avatar = "/images/OnionKnight.jpg"
+    # subtitle = "Freedom is not free!!"
+    subtitle = "What I cannot create, I do not understand~"
+    cdn_url = ""   # Base CDN URL
     home_mode = "" # post or other
 
     google_verification = ""
