@@ -3,7 +3,7 @@ title: Rsync under the hood
 author: ash
 tags: ["linux", "rsync", "unix"]
 categories: ["UNIX哲学"]
-date: 2021-04-21T14:46:02+08:00
+date: 2021-04-22T15:35:01+08:00
 ---
 
 ## **0x00 rsync 简介**
