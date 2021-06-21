@@ -4,6 +4,7 @@ author: ash
 tags: ["windows", "scoop", "package management tool"]
 categories: ["小工具大道理"]
 date: 2020-06-12T18:30:01+08:00
+image: chino00.png
 ---
 
 ## UPDATE

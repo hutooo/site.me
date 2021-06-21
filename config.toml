@@ -1,9 +1,20 @@
-baseURL = "https://ash-z01.github.io/"
+baseurl = "https://ash-z01.github.io/"
 languageCode = "en-us"
 title = "Rubik Cell Space"
-theme = "LeaveIt"
+theme = "swift"
+# theme = "card-block"
 
-paginate = 12
+author = "ash"
+canonifyurls = true
+paginate = 4  # 12
+
+copyright = "Copyright © 2008–2018, Steve Francia and the Hugo Authors; all rights reserved."
+
+# Enable syntax highlighting
+# comment on delete the following lines 11 ~ 13
+pygmentsCodefences = true
+pygmentsCodefencesGuessSyntax = true
+
 enableEmoji = true
 enableRobotsTXT = true
 googleAnalytics = ""
@@ -17,6 +28,7 @@ preserveTaxonomyNames = true
 
 [Permalinks]
  posts = "/:year/:filename/"
+
 
 [menu]
   [[menu.main]]
@@ -39,6 +51,7 @@ preserveTaxonomyNames = true
     url = "/about/"
     weight = 4
 
+
 [params]
     since = 2020
     author = "ash"
@@ -58,6 +71,32 @@ preserveTaxonomyNames = true
     baiduAnalytics = ""
 
     license= '本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可'
+
+
+[params.designer]
+    name = "ash"
+    url = "https://github.com/ash-z01"
+[[params.authors]]
+    name = "ash" # can be nickname # if fullName 👇🏻 isn't set, name will be displayed on author card
+    # fullName = "ash-z" # optional. If set, it will display on author card
+    bio = "What I cannot create, I do not understand~"
+    photo = "/images/chino.png"
+    url = "https://github.com/ash-z01"
+
+    logo = "/images/touhou-lite.png"
+    # author = "xxx" # default author
+    image = "/images/touhou-lite.png" # used whenever a page image is not set
+[params.staticman]
+#   endpoint = ""  # URL of your own API deployment (without trailing slash), default: "https://staticman-frama.herokuapp.com"
+    # gitProvider = "github"  # Either "github" or "gitlab"
+    # username = "ash-z01"  # GitHub/GitLab user name
+#   repository = "repo"  # GitHub/GitLab user name
+#   branch = "master"  # Branch holding the source code for your site, should match the `branch` parameter in `staticman.yml`
+#
+#   # If you use reCAPTCHA v2, you must also set these parameters in staticman.yml
+#   [Params.staticman.reCaptcha]
+#     siteKey = ""  # Use your own site key, you need to apply for one on Google
+#     secret  = ""  # ENCRYPT your password by going to https://<staticman-endpoint>/v3/encrypt/<your-site-secret>
 
 [params.social]
     GitHub = "ash-z01"

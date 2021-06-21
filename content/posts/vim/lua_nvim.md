@@ -4,6 +4,7 @@ author: ash
 tags: ["editor", "neovim", "lua"]
 categories: ["小小编辑器装着大道理"]
 date: 2021-05-05T11:58:12+08:00
+image: miku.jpg
 ---
 
 ## 0x00 Why Lua?

@@ -4,6 +4,7 @@ author: ash
 tags: ["DataStructure", "BPlusTree", "B+树"]
 categories: ["数据结构"]
 date: 2021-06-06T14:46:02+08:00
+image: 'page/touhou-lite.png'
 ---
 
 ## 起因

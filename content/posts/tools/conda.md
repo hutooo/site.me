@@ -4,6 +4,7 @@ author: ash
 tags: ["conda"]
 categories: ["小工具大道理"]
 date: 2020-06-11T18:35:01+08:00
+image: chino00.png
 ---
 
 ## 配置文件

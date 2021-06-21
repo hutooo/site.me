@@ -8,8 +8,8 @@ keywords: []
 slug: "docker swarm"
 aliases: []
 author: ash
-images:
-- images/chino.png
+image: 
+ - Digimon.png
 ---
 
 ## 0x00 what

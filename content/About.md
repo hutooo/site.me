@@ -1,6 +1,7 @@
 ---
 title: About Rubik  o(*￣▽￣*)ブ
 date: 2020-10-10T10:10:10+08:00
+image: RubySICP.jpg
 ---
 
 > # **⭐ Freedom is not free !! 🌌**

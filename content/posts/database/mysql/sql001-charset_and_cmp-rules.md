@@ -4,6 +4,7 @@ author: ash
 tags: ["MySQL", "SQL", "DataBase"]
 categories: ["数据库探秘", "Hacking"]
 date: 2020-07-22T16:49:48+08:00
+image: 're0.jpg'
 ---
 
 ## 字符集与比较规则简介
