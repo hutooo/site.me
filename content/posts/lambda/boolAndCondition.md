@@ -4,7 +4,7 @@ author: ash
 tags: ["Lambda", "λ", "λ-演算"]
 categories: ["Lambda奥秘"]
 date: 2020-11-20T12:12:10+08:00
-image: chino01.jpg
+image: chino00.png
 ---
 
 > 我想寻求这样一张特殊的字母表，其元素表示的不是声音而是概念。有了这样一个符号系统，我们就可以发展出一种语言，

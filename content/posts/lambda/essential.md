@@ -4,7 +4,7 @@ author: ash
 tags: ["Lambda", "λ", "λ-演算"]
 categories: ["Lambda奥秘"]
 date: 2020-11-18T17:10:10+08:00
-image: miku.jpg
+image: miku00.jpg
 ---
 
 > 法国作家、冒险家、艺术家和航空工程师 **安东尼·德·圣埃克苏佩里** (Antoine de Saint-Exupéry) 在论飞机设计时说：

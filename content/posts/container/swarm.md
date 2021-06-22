@@ -9,7 +9,7 @@ slug: "docker swarm"
 aliases: []
 author: ash
 image: 
- - Digimon.png
+ - re0.jpg
 ---
 
 ## 0x00 what

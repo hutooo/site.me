@@ -1,4 +1,4 @@
-baseurl = "https://ash-z01.github.io/"
+baseURL = "https://ash-z01.github.io/"
 languageCode = "en-us"
 title = "Rubik Cell Space"
 theme = "swift"
@@ -55,23 +55,9 @@ preserveTaxonomyNames = true
 [params]
     since = 2020
     author = "ash"
-    # avatar = "/images/chino.png"
     avatar = "/images/OnionKnight.jpg"
     # subtitle = "Freedom is not free!!"
     subtitle = "What I cannot create, I do not understand~"
-    cdn_url = ""   # Base CDN URL
-    home_mode = "" # post or other
-
-    google_verification = ""
-   
-    description = "" # site description
-    keywords = "" # site keywords
-
-    beian = ""
-    baiduAnalytics = ""
-
-    license= '本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可'
-
 
 [params.designer]
     name = "ash"

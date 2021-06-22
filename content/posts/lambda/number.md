@@ -4,7 +4,7 @@ author: ash
 tags: ["Lambda", "λ", "λ-演算"]
 categories: ["Lambda奥秘"]
 date: 2020-11-19T11:40:10+08:00
-image: chino00.png
+image: fate00.jpg
 ---
 
 > 万物皆数，数是宇宙的根本，找到数就找到了宇宙的本原. --------- 毕达哥拉斯
