@@ -17,32 +17,39 @@ image: RubySICP.jpg
 * 🐱‍💻 拥抱变革
 * 🤡 积极乐观
 
-## **Rubik Likes**
+## Rubik's favorite books
 
-* Books
+* 数学女孩
+* 编码
+* 公主的月亮 
+* ...
 
-    - <数学女孩>, <编码>, <复杂>, <公主的月亮> ...
+## Rubik's favorite animations
 
-* Animation
+* 宫崎骏系列动画
+* 轻音少女
+* 0079-口袋中的战争
+* ...
 
-    - 宫崎骏系列动画, 轻音少女, 0079-口袋中的战争 ...
+## Rubik's favorite movies
 
-* Movies
+* 肖申克的救赎
+* 勇敢的心
+* 寻梦环游记
+* ...
 
-    - 肖申克的救赎, 勇敢的心, 寻梦环游记 ...
+## Rubik's favorite games
 
-* Games
+* [游戏性]
+    - 塞尔达系列、马里奥系列、分手厨房、蔚蓝、Splatoon ...
 
-    1. [游戏性]
-        塞尔达系列、马里奥系列、分手厨房、蔚蓝、Splatoon ...
-    
-    2. [艺术性]
-        Ori、血源诅咒、黑暗之魂、空洞骑士 ...
-    
-    3. [创造性]
-        DQ建造者，马里奥制造, MC ...
+* [艺术性]
+    - Ori、血源诅咒、黑暗之魂、空洞骑士 ...
+
+* [创造性]
+    - DQ建造者，马里奥制造, MC ...
 
 
-## **Find Rubik**
+## Find Rubik
 
 To Be Coutinue..
