@@ -87,3 +87,9 @@ preserveTaxonomyNames = true
 [params.social]
     GitHub = "ash-z01"
     Email   = "1445684859@qq.com"
+
+
+# [markup]
+  # [markup.highlight]
+      # lineNos = true
+      # style = "github"
