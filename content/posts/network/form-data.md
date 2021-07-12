@@ -189,5 +189,96 @@ type MIMEHeader map[string][]string
 有了上述对通过`multipart/form-data`格式上传文件的原理的拆解，我们就可以使用Go实现一个简单的支持以`multipart/form-data`格式上传文件的Go服务器.
 
 ```go
+package main
 
+import (
+	"fmt"
+	"io"
+	"net/http"
+	"os"
+)
+
+const uploadPath = "./upload"
+
+func handleUploadFile(w http.ResponseWriter, r *http.Request) {
+	r.ParseMultipartForm(100)
+	mForm := r.MultipartForm
+
+	for k := range mForm.File {
+		// k is the key of file part
+		file, fileHeader, err := r.FormFile(k)
+		if err != nil {
+			fmt.Println("inovke FormFile error:", err)
+			return
+		}
+		defer file.Close()
+		fmt.Printf("the uploaded file: name[%s], size[%d], header[%#v]\n",
+			fileHeader.Filename, fileHeader.Size, fileHeader.Header)
+
+		// store uploaded file into local path
+		localFileName := uploadPath + "/" + fileHeader.Filename
+		out, err := os.OpenFile(localFileName, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+		// out, err := os.Create(localFileName)
+		if err != nil {
+			fmt.Printf("failed to open the file %s for writing", localFileName)
+			return
+		}
+		defer out.Close()
+		_, err = io.Copy(out, file)
+		if err != nil {
+			fmt.Printf("copy file err:%s\n", err)
+			return
+		}
+		fmt.Printf("file %s uploaded ok\n", fileHeader.Filename)
+	}
+}
+
+func main() {
+	http.HandleFunc("/upload", handleUploadFile)
+	http.ListenAndServe(":8081", nil)
+}
+```
+
+运行Go文件上传服务:
+
+```sh
+mkdir upload
+# 启动文件服务
+go run main.go
+```
+
+使用curl/httpie/curlie/ht/postman等http工具：
+
+```sh
+http -f --follow POST :8081/upload file1@/path-to/test1
+
+或者
+
+curl --location --request POST 'http://localhost:8081/upload' --form 'file1=@"/path-to/test2"'
+
+或者
+
+...
+```
+
+可以看到服务终端打印:
+
+```sh
+go run main.go
+
+the uploaded file: name[test1], size[21634], header[textproto.MIMEHeader{"Content-Disposition":[]string{"form-data; name=\"file1\"; filename=\"test1\""}, "Content-Type":[]string{"text/markdown"}}]
+file test1 uploaded ok
+```
+
+然后可以看到 文件上传服务成功将接收到的文件存入upload目录下：
+
+```sh
+tree upload/
+
+upload/
+├── test1
+├── test2
+└── test3
+
+0 directories, 3 files
 ```
