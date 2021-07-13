@@ -402,6 +402,12 @@ go run client.go -file /path-to/test4
 使用golang提供的io.Pipe，可以较好的解决这个问题~
 
 ```go
+var quoteEscaper = strings.NewReplacer("\\", "\\\\", `"`, "\\\"")
+
+func escapeQuotes(s string) string {
+	return quoteEscaper.Replace(s)
+}
+
 func createReqBody(filePath string) (string, io.Reader, error) {
     var err error
     pr, pw := io.Pipe()
