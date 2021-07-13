@@ -119,7 +119,9 @@ image: chino03.jpg
 
 文件分段默认为`Content-Type为text/plain`，对于无法识别的文件类型，`Content-Type`通常会设置为`application/octet-stream`
 
-# 支持以multipart/form-data格式上传文件的Go服务器
+# 0x03 文件上传服务
+
+## 支持以multipart/form-data格式上传文件的Go服务器
 
 golang的`http.Request`模块提供了`ParseMultipartForm`方法对以`multipart/form-data`格式传输的数据进行解析，解析即是将数据映射为Request结构的MultipartForm字段的过程.
 
@@ -244,7 +246,7 @@ func main() {
 ```sh
 mkdir upload
 # 启动文件服务
-go run main.go
+go run fileserver.go
 ```
 
 使用curl/httpie/curlie/ht/postman等http工具：
@@ -264,7 +266,7 @@ curl --location --request POST 'http://localhost:8081/upload' --form 'file1=@"/p
 可以看到服务终端打印:
 
 ```sh
-go run main.go
+go run fileserver.go
 
 the uploaded file: name[test1], size[21634], header[textproto.MIMEHeader{"Content-Disposition":[]string{"form-data; name=\"file1\"; filename=\"test1\""}, "Content-Type":[]string{"text/markdown"}}]
 file test1 uploaded ok
@@ -282,3 +284,263 @@ upload/
 
 0 directories, 3 files
 ```
+
+##  支持以multipart/form-data格式上传文件的Go客户端
+
+别人的东西再好，终究不如自己的顺手~ 所以我们自己构建一个客户端.
+
+使用mime/multipart包，很容易可以构建符合multipart/form-data格式的HTTP请求.
+
+```go
+package main
+
+import (
+	"bytes"
+	"flag"
+	"fmt"
+	"io"
+	"mime/multipart"
+	"net/http"
+	"os"
+	"path/filepath"
+)
+
+var (
+	filePath string
+	addr     string
+)
+
+func init() {
+	flag.StringVar(&filePath, "file", "", "the file to upload")
+	flag.StringVar(&addr, "addr", "localhost:8081", "the addr of file server")
+	flag.Parse()
+}
+
+func main() {
+	if filePath == "" {
+		fmt.Println("file must not be empty")
+		return
+	}
+
+	err := doUpload(addr, filePath)
+	if err != nil {
+		fmt.Printf("upload file [%s] error: %s", filePath, err)
+		return
+	}
+	fmt.Printf("upload file [%s] ok\n", filePath)
+}
+
+func createReqBody(filePath string) (string, io.Reader, error) {
+	var err error
+
+	buf := new(bytes.Buffer)
+	bw := multipart.NewWriter(buf) // body writer
+
+	f, err := os.Open(filePath)
+	if err != nil {
+		return "", nil, err
+	}
+	defer f.Close()
+
+	// text part1
+	p1w, _ := bw.CreateFormField("name")
+	p1w.Write([]byte("Ash XYZ"))
+
+	// text part2
+	p2w, _ := bw.CreateFormField("age")
+	p2w.Write([]byte("15"))
+
+	// file part1
+	_, fileName := filepath.Split(filePath)
+	fw1, _ := bw.CreateFormFile("file1", fileName)
+	io.Copy(fw1, f)
+
+	bw.Close() //write the tail boundry
+	return bw.FormDataContentType(), buf, nil
+}
+
+func doUpload(addr, filePath string) error {
+	// create body
+	contType, reader, err := createReqBody(filePath)
+	if err != nil {
+		return err
+	}
+
+	url := fmt.Sprintf("http://%s/upload", addr)
+	req, err := http.NewRequest("POST", url, reader)
+
+	// add headers
+	req.Header.Add("Content-Type", contType)
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		fmt.Println("request send error:", err)
+		return err
+	}
+	resp.Body.Close()
+	return nil
+}
+
+```
+
+使用go客户端上传文件
+
+```sh
+go run client.go -file /path-to/test4
+```
+
+
+# 0x03 自定义file分段中的header
+
+...
+
+# 0x04 大文件上传问题
+
+之前的客户端程序中，我们构建HTTP Body时，使用了`bytes.Buffer`加载待上传文件的所有内容. 但是当文件很大的时候，内存空间消耗巨大甚至不足以容纳文件大小~
+
+使用golang提供的io.Pipe，可以较好的解决这个问题~
+
+```go
+func createReqBody(filePath string) (string, io.Reader, error) {
+    var err error
+    pr, pw := io.Pipe()
+    bw := multipart.NewWriter(pw) // body writer
+    f, err := os.Open(filePath)
+    if err != nil {
+        return "", nil, err
+    }
+
+    go func() {
+        defer f.Close()
+        // text part1
+        p1w, _ := bw.CreateFormField("name")
+        p1w.Write([]byte("Tony Bai"))
+
+        // text part2
+        p2w, _ := bw.CreateFormField("age")
+        p2w.Write([]byte("15"))
+
+        // file part1
+        _, fileName := filepath.Split(filePath)
+        h := make(textproto.MIMEHeader)
+        h.Set("Content-Disposition",
+            fmt.Sprintf(`form-data; name="%s"; filename="%s"`,
+                escapeQuotes("file1"), escapeQuotes(fileName)))
+        h.Set("Content-Type", "application/tar")
+        fw1, _ := bw.CreatePart(h)
+        cnt, _ := io.Copy(fw1, f)
+        log.Printf("copy %d bytes from file %s in total\n", cnt, fileName)
+        bw.Close() //write the tail boundry
+        pw.Close()
+    }()
+    return bw.FormDataContentType(), pr, nil
+}
+```
+
+在这个方案中，我们通过io.Pipe函数创建了一个读写管道，写入端作为io.Writer实例传给multipart.NewWriter，读取端返回给调用者，用于构建HTTP请求时使用. 
+
+io.Pipe基于channel实现，其内部不维护任何内存缓存:
+
+```go
+// Pipe creates a synchronous in-memory pipe.
+// It can be used to connect code expecting an io.Reader
+// with code expecting an io.Writer.
+//
+// Reads and Writes on the pipe are matched one to one
+// except when multiple Reads are needed to consume a single Write.
+// That is, each Write to the PipeWriter blocks until it has satisfied
+// one or more Reads from the PipeReader that fully consume
+// the written data.
+// The data is copied directly from the Write to the corresponding
+// Read (or Reads); there is no internal buffering.
+//
+// It is safe to call Read and Write in parallel with each other or with Close.
+// Parallel calls to Read and parallel calls to Write are also safe:
+// the individual calls will be gated sequentially.
+func Pipe() (*PipeReader, *PipeWriter) {
+	p := &pipe{
+		wrCh: make(chan []byte),
+		rdCh: make(chan int),
+		done: make(chan struct{}),
+	}
+	return &PipeReader{p}, &PipeWriter{p}
+}
+```
+
+通过Pipe返回的reader端在读取管道中的数据时，如果尚未有数据写入管道，那么读端会阻塞.
+
+由于HTTP请求在被发送时(client.Do(req))才会真正基于构建req时传入的reader对Body数据进行读取，因此client会阻塞在对管道的read上. 因此我们不能将读写两端的操作放在同一个goroutine中，那样所有goroutine都会因挂起而panic.
+
+在上面代码中，函数createReqBody内部创建了一个新goroutine，将真正构建multipart/form-data body的工作放在了新goroutine中，新goroutine最终会将待上传文件的数据通过管道writer端写入管道.
+
+```go
+count, _ := io.Copy(partWriter, fileReader)
+```
+
+而这些数据也会被client读取并通过网络连接传输出去.  io.Copy的实现如下:
+
+```go
+// Copy copies from src to dst until either EOF is reached
+// on src or an error occurs. It returns the number of bytes
+// copied and the first error encountered while copying, if any.
+//
+// A successful Copy returns err == nil, not err == EOF.
+// Because Copy is defined to read from src until EOF, it does
+// not treat an EOF from Read as an error to be reported.
+//
+// If src implements the WriterTo interface,
+// the copy is implemented by calling src.WriteTo(dst).
+// Otherwise, if dst implements the ReaderFrom interface,
+// the copy is implemented by calling dst.ReadFrom(src).
+func Copy(dst Writer, src Reader) (written int64, err error) {
+	return copyBuffer(dst, src, nil)
+}
+```
+
+io.copyBuffer内部维护了一个默认32k的小buffer，它每次从src尝试最大读取32k的数据，并写入到dst中，直到读完为止. 这样无论待上传的文件有多大，我们实际上每次上传所分配的内存仅有32k.
+
+如果觉得32k仍然很大，每次上传要使用更小的buffer，可以用io.CopyBuffer替代io.Copy:
+
+```go
+func createReqBody(filePath string) (string, io.Reader, error) {
+	var err error
+	pr, pw := io.Pipe()
+	bw := multipart.NewWriter(pw) // body writer
+	f, err := os.Open(filePath)
+	if err != nil {
+		return "", nil, err
+	}
+
+	go func() {
+		defer f.Close()
+		// text part1
+		p1w, _ := bw.CreateFormField("name")
+		p1w.Write([]byte("Tony Bai"))
+
+		// text part2
+		p2w, _ := bw.CreateFormField("age")
+		p2w.Write([]byte("15"))
+
+		// file part1
+		_, fileName := filepath.Split(filePath)
+		h := make(textproto.MIMEHeader)
+		h.Set("Content-Disposition",
+			fmt.Sprintf(`form-data; name="%s"; filename="%s"`,
+				escapeQuotes("file1"), escapeQuotes(fileName)))
+		h.Set("Content-Type", "application/tar")
+		fw1, _ := bw.CreatePart(h)
+		var buf = make([]byte, 1024)
+		cnt, _ := io.CopyBuffer(fw1, f, buf)
+		log.Printf("copy %d bytes from file %s in total\n", cnt, fileName)
+		bw.Close() //write the tail boundry
+		pw.Close()
+	}()
+	return bw.FormDataContentType(), pr, nil
+}
+```
+
+# 0x05 参考文献
+
+1. [https://golangnote.com/topic/246.html](https://golangnote.com/topic/246.html)
+2. [https://www.ietf.org/rfc/rfc7233.txt](https://www.ietf.org/rfc/rfc7233.txt)
