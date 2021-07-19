@@ -4,7 +4,7 @@ author: ash
 tags: ["conda"]
 categories: ["小工具大道理"]
 date: 2020-06-11T18:35:01+08:00
-image: re0-01.jpg
+cover: "/images/re0-01.jpg"
 ---
 
 ## 配置文件

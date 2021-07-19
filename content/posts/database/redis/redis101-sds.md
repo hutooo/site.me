@@ -4,7 +4,7 @@ author: ash
 tags: ["Redis", "NoSQL"]
 categories: ["存储探秘", "Hacking", "DIY"]
 date: 2021-04-12T19:46:47+08:00
-image: 'miku01.jpg'
+cover: "/images/miku01.jpg"
 ---
 
 

@@ -4,7 +4,8 @@ author: ash
 tags: ["linux", "rsync", "unix"]
 categories: ["UNIX哲学"]
 date: 2021-04-22T15:35:01+08:00
-image: No-39.jpg
+cover: "/images/No-39.jpg"
+math: md
 ---
 
 ## **0x00 rsync 简介**

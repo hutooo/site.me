@@ -4,7 +4,7 @@ author: ash
 tags: ["MVCC", "DataBase", "Concurrency", "Paper"]
 categories: ["阅读与感悟"]
 date: 2021-04-21T14:46:02+08:00
-image: chino03.jpg
+cover: "/images/chino03.jpg"
 ---
 
 ## 0x00 摘要

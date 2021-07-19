@@ -4,7 +4,7 @@ author: ash
 tags: ["MySQL", "SQL", "DataBase"]
 categories: ["数据库探秘", "Hacking"]
 date: 2020-07-22T16:49:48+08:00
-image: miku02.jpg
+cover: "/images/miku02.jpg"
 ---
 
 ## InnoDB页简介

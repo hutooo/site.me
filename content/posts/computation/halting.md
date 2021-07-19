@@ -4,7 +4,7 @@ author: ash
 tags: ["停机问题", "Computation", "计算机科学", "Computer Science"]
 categories: ["计算探秘", "Explore"]
 date: 2021-07-02T14:49:08+08:00
-image: "hollow-knight.png"
+cover: "/images/hollow-knight.png"
 ---
 
 就是能不能写一个程序，这个程序能判断别的程序是否会在有限时间内停止，

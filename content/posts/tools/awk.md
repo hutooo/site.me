@@ -4,7 +4,7 @@ author: ash
 tags: ["linux", "awk", "unix"]
 categories: ["UNIX哲学"]
 date: 2021-06-24T18:55:01+08:00
-image: touhou03.jpg
+cover: "/images/touhou03.jpg"
 ---
 
 ```sh

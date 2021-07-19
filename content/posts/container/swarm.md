@@ -8,8 +8,7 @@ keywords: []
 slug: "docker swarm"
 aliases: []
 author: ash
-image: 
- - re0.jpg
+cover: "/images/re0.jpg"
 ---
 
 ## 0x00 what

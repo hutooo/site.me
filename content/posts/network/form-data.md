@@ -4,7 +4,7 @@ author: ash
 tags: ["Go", "form-data", "HTTP"]
 categories: ["记录一下"]
 date: 2021-06-13T13:27:09+08:00
-image: chino03.jpg
+cover: "/images/chino03.jpg"
 ---
 
 # 0x01 Form（表单）

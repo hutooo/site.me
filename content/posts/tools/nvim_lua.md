@@ -4,7 +4,7 @@ author: ash
 tags: ["editor", "neovim", "lua"]
 categories: ["小工具大道理"]
 date: 2021-05-05T11:58:12+08:00
-image: vr.jpg
+cover: "/images/vr.jpg"
 ---
 
 ## 0x00 Why Lua?

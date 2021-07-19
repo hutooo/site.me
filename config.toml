@@ -1,8 +1,7 @@
 baseURL = "https://ash-z01.github.io/"
 languageCode = "en-us"
 title = "Rubik Cell Space"
-theme = "swift"
-# theme = "card-block"
+theme = "kagome"
 
 author = "ash"
 canonifyurls = true

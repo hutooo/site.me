@@ -1,7 +1,7 @@
 ---
 title: About Rubik  o(*￣▽￣*)ブ
 date: 2020-10-10T10:10:10+08:00
-image: RubySICP.jpg
+cover: "/images/RubySICP.jpg"
 ---
 
 > # **⭐ Freedom is not free !! 🌌**
@@ -43,12 +43,11 @@ image: RubySICP.jpg
 * [游戏性]
     - 塞尔达系列、马里奥系列、分手厨房、蔚蓝、Splatoon ...
 
-* [艺术性]
-    - Ori、血源诅咒、黑暗之魂、空洞骑士 ...
-
-* [创造性]
+* [创造力]
     - DQ建造者，马里奥制造, MC ...
 
+* [艺术品]
+    - 空洞骑士、Ori、血源诅咒、黑暗之魂 ...
 
 ## Find Rubik
 

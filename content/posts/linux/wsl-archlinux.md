@@ -4,7 +4,7 @@ author: ash
 tags: ["Linux", "WSL", "windows"]
 categories: ["小工具大道理"]
 date: 2020-06-15T17:55:01+08:00
-image: fate00.png
+cover: "/images/fate00.png"
 ---
 
 ## 简化安装
