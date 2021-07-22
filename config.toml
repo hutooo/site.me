@@ -3,92 +3,102 @@ languageCode = "en-us"
 title = "Rubik Cell Space"
 theme = "kagome"
 
-author = "ash"
-canonifyurls = true
-paginate = 4  # 12
-
+# canonifyurls = true
+paginate = 7  # 12
+hasCJKLanguage = true
 copyright = "Copyright © 2008–2018, Steve Francia and the Hugo Authors; all rights reserved."
 
-# Enable syntax highlighting
-# comment on delete the following lines 11 ~ 13
-pygmentsCodefences = true
-pygmentsCodefencesGuessSyntax = true
 
-enableEmoji = true
-enableRobotsTXT = true
-googleAnalytics = ""
-
-preserveTaxonomyNames = true
-
-[blackfriday]
-  hrefTargetBlank = true
-  nofollowLinks = true
-  noreferrerLinks = true
-
-[Permalinks]
- posts = "/:year/:filename/"
-
+# 作者信息
+[author]
+  name = "ash"
+  email = "ash-z@foxmail.com"
+  description = "What I cannot create, I do not understand~"
+  # avatar = "https://s.gravatar.com/avatar/7b5a0b07a98895278cfa862b1f32ae8f?s=200&r=g&d=retro"
+  avatar = "/images/OnionKnight.jpg"
 
 [menu]
+  # 顶部导航栏
   [[menu.main]]
-    name = "Blog"
-    url = "/posts/"
+    identifier = "/"
+    name = "HOME"
+    url = "/"
     weight = 1
-
   [[menu.main]]
-    name = "Categories"
-    url = "/categories/"
+    identifier = "/posts"
+    name = "POSTS"
+    url = "/posts"
     weight = 2
-
   [[menu.main]]
-    name = "Tags"
-    url = "/tags/"
+    identifier = "/message"
+    name = "MESSAGE"
+    url = "/message"
     weight = 3
-
   [[menu.main]]
-    name = "About"
-    url = "/about/"
+    identifier = "/link"
+    name = "LINK"
+    url = "/link"
     weight = 4
+  
+  # 底部社交图标
+  [[menu.social]]
+    identifier = "github"
+    name = "github"
+    url = "https://github.com/ash-z01"
+    weight = 1
+  # [[menu.social]]
+  #   identifier = "twitter"
+  #   name = "twitter"
+  #   url = "https://twitter.com/guanquanhong"
+  #   weight = 2
+  # [[menu.social]]
+  #   identifier = "instagram"
+  #   name = "instagram"
+  #   url = "https://www.instagram.com/sukoshi_dayo/"
+  #   weight = 3
+  # [[menu.social]]
+  #   identifier = "weibo"
+  #   name = "weibo"
+  #   url = "https://weibo.com/u/5561168966"
+  #   weight = 4
+  # [[menu.social]]
+  #   identifier = "zhihu"
+  #   name = "zhihu"
+  #   url = "https://www.zhihu.com/people/miku-84"
+  #   weight = 5
 
+# URL格式
+[permalinks]
+  posts = "/:section/:year:month:day:15:04/"
+  files = "/:section/:year:month:day:15:04/"
+  docs = "/:section/:year:month:day:15:04/"
 
+# 主题相关配置项
 [params]
-    since = 2020
-    author = "ash"
-    avatar = "/images/OnionKnight.jpg"
-    # subtitle = "Freedom is not free!!"
-    subtitle = "What I cannot create, I do not understand~"
+  keywords = ['theme', 'kagome']
+  description = ""
+  mainSections = ["posts"]
+  # 国内备案号
+  beian = ""
+  # TOC目录出现字符长度限制
+  toc_show_len = 300
 
-[params.designer]
-    name = "ash"
-    url = "https://github.com/ash-z01"
-[[params.authors]]
-    name = "ash" # can be nickname # if fullName 👇🏻 isn't set, name will be displayed on author card
-    # fullName = "ash-z" # optional. If set, it will display on author card
-    bio = "What I cannot create, I do not understand~"
-    photo = "/images/chino.png"
-    url = "https://github.com/ash-z01"
+  [params.widget]
+    # 相关文章推荐数量
+    articles_count = 6
+    # 分类相关显示数量
+    categories_count = 6
+    # 标签相关显示数量
+    tags_count = 12
 
-    logo = "/images/touhou-lite.png"
-    # author = "xxx" # default author
-    image = "/images/touhou-lite.png" # used whenever a page image is not set
-[params.staticman]
-#   endpoint = ""  # URL of your own API deployment (without trailing slash), default: "https://staticman-frama.herokuapp.com"
-    # gitProvider = "github"  # Either "github" or "gitlab"
-    # username = "ash-z01"  # GitHub/GitLab user name
-#   repository = "repo"  # GitHub/GitLab user name
-#   branch = "master"  # Branch holding the source code for your site, should match the `branch` parameter in `staticman.yml`
-#
-#   # If you use reCAPTCHA v2, you must also set these parameters in staticman.yml
-#   [Params.staticman.reCaptcha]
-#     siteKey = ""  # Use your own site key, you need to apply for one on Google
-#     secret  = ""  # ENCRYPT your password by going to https://<staticman-endpoint>/v3/encrypt/<your-site-secret>
+  [params.aplayer]
+    theme = "#b7daff"
+    autoplay = false
+    loop = "none"
+    mutex = true
 
-[params.social]
-    GitHub = "ash-z01"
-    Email   = "1445684859@qq.com"
-
-
-# [markup]
-  # [markup.highlight]
-      # lineNos = true
-      # style = "github"
+  [params.dplayer]
+    theme = "#b7daff"
+    autoplay = false
+    loop = false
+    mutex = true
