@@ -3,11 +3,10 @@ title: 瑞士军刀 - NetCat
 author: ash
 tags: ["linux", "netcat", "unix"]
 categories: ["UNIX哲学"]
-date: 2021-05-05T11:58:12+08:00
+date: 2021-05-06T10:12:10+08:00
 cover: "/images/vr.jpg"
 ---
 
-# 0x00 
 
 # 0x01 文件传输
 
