@@ -19,6 +19,6 @@ $ some-command > /tmp/output.txt
 
 However, you can explicitly override the setting of noclobber with the >| redirection operator - the redirection will work, even if noclobber is set.
 
-You can find out if noclobber is set in your current environment with set -o.
+You can find out if noclobber is set in your current environment with `set -o`.
 
 For the historical note, both the "noclobber" option and its bypass features come from csh (late 70s). ksh copied it (early 80s) but used >| instead of >!. POSIX specified the ksh syntax (so all POSIX shells including bash, newer ash derivatives used as sh on some systems support it). Zsh supports both syntaxes. I don't think it was added to any Bourne shell variant but I might be wrong.
