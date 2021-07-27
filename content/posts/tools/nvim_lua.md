@@ -19,7 +19,7 @@ cover: "/images/vr.jpg"
 
 万事开头难(，然后中间难，最后结果难)~  那就一起来看看它的真面目吧~ 
 
-> 本文以 `NeoVim v0.5.0-dev+1297-g63d8a8f4e` 版本为基础 进行编写.
+> 本文以 `NeoVim v0.5.0` 版本为基础 进行编写.
 
 ## 0x01 NeoVim Lua Basics
 
