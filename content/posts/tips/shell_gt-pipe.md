@@ -4,7 +4,7 @@ author: ash
 tags: ["tips", "shell"]
 categories: ["Tips"]
 date: 2021-07-12T18:51:10+08:00
-cover: "/images/vr.jpg"
+cover: "/images/chino03.jpg"
 ---
 
 ```sh

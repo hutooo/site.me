@@ -4,7 +4,7 @@ author: ash
 tags: ["数学归纳法", "Mathematics", "Induction"]
 categories: ["数学", "Mathematics"]
 date: 2021-07-01T14:16:05+08:00
-cover: "/images/touhou03.jpg"
+cover: "/images/touhou01.jpg"
 math: md
 ---
 

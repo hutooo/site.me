@@ -4,7 +4,7 @@ author: ash
 tags: ["可数与不可数", "Mathematics"]
 categories: ["数学", "Mathematics"]
 date: 2021-07-02T10:50:08+08:00
-cover: "/images/miku.png"
+cover: "/images/miku00.jpg"
 math: md
 ---
 
