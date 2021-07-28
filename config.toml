@@ -1,6 +1,6 @@
 baseURL = "https://ash-z01.github.io/"
 languageCode = "en-us"
-title = "Rubik Cell Space"
+title = "XYZ Cell Space"
 theme = "kagome"
 
 # canonifyurls = true
@@ -39,6 +39,11 @@ copyright = "Copyright © 2008–2018, Steve Francia and the Hugo Authors; all r
     name = "LINK"
     url = "/link"
     weight = 4
+  [[menu.main]]
+    identifier = "/about"
+    name = "ABOUT"
+    url = "/about"
+    weight = 3
   
   # 底部社交图标
   [[menu.social]]
