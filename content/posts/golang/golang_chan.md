@@ -1,7 +1,7 @@
 ---
 title: Golang数据结构 --- channel/chan
 author: ash
-tags: ["DataStructure", "Golang", "channel/chan"]
+tags: ["Golang", "channel/chan"]
 categories: ["Golang剖析"]
 date: 2020-05-05T21:30:00+08:00
 cover: "/images/vr.jpg"
