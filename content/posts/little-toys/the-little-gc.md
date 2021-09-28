@@ -83,7 +83,7 @@ GC背后的基本思想是，程序语言(在大多数情况下)似乎可以访�
 
 现在我们设计一个玩具级语言~ 它是个动态类型语言，只有两种类型，int 和 pair， 用枚举体表示:
 
-```c
+```c++
 typedef enum {
     OBJ_INT,
     OBJ_PAIR
@@ -96,7 +96,7 @@ pair可以是两个int, 也可以是一个int和两一个pair，也可以是两�
 
 虚拟机(`VM`)种的对象可以是Int、Pair 这两种类型的任意一种，使用联合体来表示:
 
-```c
+```c++
 typedef struct sObject {
     ObjectType type;  // 用来区分对象的类型
 
@@ -128,7 +128,7 @@ Object结构用于表示对象，ObjectType用来区别是Int还是Pair类型；
 
 方便起见，这里简单的构建这个虚拟机模型:
 
-```c
+```c++
 // 虚拟机堆栈的最大容量
 #define STACK_MAX 256
 
@@ -145,7 +145,7 @@ typedef struct {
 
 首先，需要一个虚拟机的初始化函数:
 
-```c
+```c++
 VM* newVM() {
     // 为VM申请内存空间
     VM* vm = malloc(sizeof(VM));
@@ -156,13 +156,317 @@ VM* newVM() {
 
 好呀~ VM有了，还得能对它进行简单的操作:
 
-```c
+```c++
+// 将对象推入VM的堆栈
 void push(VM* vm, Object* obj) {
-    
+    assert(vm->stack_size < STACK_MAX, "stack overflow!");
+    vm->stack[vm->stack_size] = obj;
+    vm->stack_size += 1;
+}
+
+// 从虚拟机堆栈弹出对象
+Object* pop(VM* vm) {
+    assert(vm->stack_size > 0, "stack underflow!");
+    Object* obj = vm->stack[vm->stack_size];
+    vm->stack_size -= 1;
+    return obj;
 }
 ```
 
+以上，我们有了将对象推入和弹出VM的操作了，那么再添对象的创建操作:
+
+```c++
+// 建立一个新对象, 标记上对象的类型
+Object* newObject(VM* vm, ObjectType type) {
+    Object* obj = malloc(sizeof(Object));
+    obj->type = type;
+    return obj;
+}
+```
+
+创建了对象，我们就可以把不同类型的对象推入VM了~
+
+```c++
+void pushInt(VM* vm, int intVal) {
+    Object* obj = newObject(vm, OBJ_INT);
+    obj->value = intVal;
+    push(vm, obj);
+}
+
+Object* pushPair(VM* vm) {
+    Object* obj = newObject(vm, OBJ_PAIR);
+    obj->tail = pop(vm);
+    obj->head = pop(vm);
+    push(vm, obj);
+    return obj;
+}
+```
+
+至此, 一个小型VM就算完成了，如果有配套的解释器和解析器，我们就有了一个真正的语言！
+
+好吧，没有~ 那就收垃圾好了...
 
 # 0x06 构建GC
 
+## 标记
+
+由于本篇使用的是标记清除算法，所以第一步，就是标记.
+
+我们需要遍历所有可达的对象，设置他们的标记位, 所以当然得给Object结构一个标记位..
+
+```c++
+typedef struct sObject {
+    bool marked;  // 新加的标记位
+    // ... 剩余部分，往上翻，看之前的定义
+} Object;
+```
+
+有了标记位，我们创建新对象时(newObject)，需要将标记位初始化:
+
+```c++
+Object* newObject(VM* vm, ObjectType type) {
+    Object* obj = malloc(sizeof(Object));
+    obj->type = type;
+    obj->marked = false;
+    return obj;
+}
+```
+
+为了标记所有可访问的对象，需要遍历堆栈:
+
+```c++
+void markAll(VM* vm) {
+    for (int i = 0; i < vm->stack_size; i++) {
+        mark(vm->stack[i]);
+    }
+}
+
+void mark(Object* obj) {
+    obj->marked = true;  // 将对象标记为可达.
+}
+```
+
+但是这样还不够，因为对象可能还有引用(可达性递归)，如果对象是pair，那么它的两个字段也是可达的.. 
+
+我们修改mark函数:
+
+```c++
+void mark(Object* obj) {
+    obj->marked = true;
+
+    if (obj->type == OBJ_PAIR) {
+        mark(obj->head);
+        mark(obj->tail);
+    }
+}
+```
+
+完工！！ 哎，等等，这里貌似有个BUG~ 
+
+我们递归的调用了mark，但是如果有些pair互相引用，则递归永远不会结束，直至栈溢出并导致崩溃..
+
+这问题也相对比较容易解决，只需要在遇到已经标记过的对象时，退出即可.. 
+
+再次修改mark函数:
+
+```c++
+void mark(Object* obj) {
+
+    if (obj->marked == true) return;
+
+    obj->marked = true;
+
+    if (obj->type == OBJ_PAIR) {
+        mark(obj->head);
+        mark(obj->tail);
+    }
+}
+```
+
+OK! 现在我们的markAll函数，可以正确标记内存中所有的可达对象~
+
+## 清除
+
+现在对象标记完了，我们需要清除所有未标记的对象.
+
+但是麻烦的地方在于，这些没用打上标记的对象，都访问不到(不可达)~ 这可咋整呢~
+
+> 我们的VM实现，只在类型元素中存储了指向对象的指针~ 一旦丢失，就无法再访问，并且也造成了内存泄露.
+
+为了克服这么问题，有个简单粗暴的方法，就是用VM来维护和跟踪每一个分配的对象，我们修改Object结构:
+
+```c++
+typedef struct sObject {
+    // 我们把所有的Object串起来~ 这样VM就可以通过第一个对象，找到所有的对象..
+    struct sObject * next;
+
+    // ... 剩余部分，往上翻，看之前的定义
+} Object;
+```
+
+所以让VM来跟踪第一个对象，修改VM结构:
+
+```c++
+typedef struct {
+    // 所有对象链表的头部(第一个对象)
+    Object* firstObj;
+
+    // 存放对象的堆栈
+    Object* stack[STACK_MAX];
+
+    // 堆栈的当前大小
+    int stack_size;
+} VM;
+```
+
+同时，就也需要修改 VM 和 Object 的创建函数:
+
+```c++
+VM* newVM() {
+    // 为VM申请内存空间
+    VM* vm = malloc(sizeof(VM));
+    vm->stack_size = 0;  // 初始化VM的堆栈大小
+    vm->firstObj = NULL; // 初始化对象链表头
+    return vm;
+}
+
+Object* newObject(VM* vm, ObjectType type) {
+    Object* obj = malloc(sizeof(Object));
+    obj->type = type;
+    obj->marked = false;
+
+    obj->next = vm->firstObj;  // 更改新建对象的next元素为 VM的对象链表头部
+    vm->firstObj = obj; // 更改VM的对象链表头部为 新创建的对象
+    return obj;
+}
+```
+
+现在我们可以清除未标记的对象了:
+
+```c++
+void sweep(VM* vm) {
+    Object** obj = &vm->firstObj;
+    while (*obj != NULL) { // 对象非空
+        // 对象未标记
+        if (!(*obj)->marked) {
+            Object* unreached = *obj; // 将对象指针复制给 unreached 变量
+
+            // 清理未标记对象
+            *obj = unreached->next;
+            free(unreached);  // 释放unreached变量
+        } else {
+            // 此处的对象已经标记了，所以取消标记，以备下一轮GC
+            (*obj)->marked = false;
+
+            obj = &(*obj)->next; // 使用next对象, 进入下一轮循环
+        }
+    }
+}
+```
+
+上面代码看起来有点绕，其实本质的工作就是遍历整个对象链表，清理未标记的遍历，将已标记变量的标记初始化..
+
+那么把 markAll 和 sweep 函数结合一下，就是一个 垃圾回收器了:
+
+```c++
+void gc(VM* vm) {
+    markAll(vm);
+    sweep(vm);
+}
+```
+
+## 启动GC
+
+到这里，GC是有了，那么与之而来的新问题就是，什么时候启动GC？ 内存不足嘛？什么时候才算内存不足呢?
+
+这里貌似没用什么标准的答案，只能根据具体的情况，具体分析了~
+
+这里为了简单起见，我们就让GC在分配了一定数量的对象后，开始启动并回收垃圾吧~ (其实一些语言就是这么做的..🤫)
+
+那么，我们扩展VM结构，对分配的对象数量进行追踪:
+
+```c++
+typedef struct {
+    // 当前已分配的对象数量
+    int numObjs;
+
+    // 最大可分配的对象数量
+    int maxObjs;
+
+    // 所有对象链表的头部(第一个对象)
+    Object* firstObj;
+
+    // 存放对象的堆栈
+    Object* stack[STACK_MAX];
+
+    // 堆栈的当前大小
+    int stack_size;
+} VM;
+
+VM* newVM() {
+    // 为VM申请内存空间
+    VM* vm = malloc(sizeof(VM));
+    vm->stack_size = 0;  // 初始化VM的堆栈大小
+    vm->firstObj = NULL; // 初始化对象链表头
+
+    vm->numObjs = 0;
+
+    //GC启动的 初始阈值: 数字越小在内存方面越保守，数字越大则在垃圾收集上的时间越少~
+    vm->maxObjs = GC_THRESHOLD;
+
+    return vm;
+}
+```
+
+也得修改 newObject 函数:
+
+```c++
+Object* newObject(VM* vm, ObjectType type) {
+
+    // 到达阈值，启动GC
+    if (vm->numObjs == vm->maxObjs) {
+        gc(vm);
+    }
+
+    Object* obj = malloc(sizeof(Object));
+    obj->type = type;
+    obj->marked = false;
+
+    obj->next = vm->firstObj;  // 更改新建对象的next元素为 VM的对象链表头部
+    vm->firstObj = obj; // 更改VM的对象链表头部为 新创建的对象
+
+    vm->numObjs += 1; // 创建了新的对象，当前对象数量 +1
+    return obj;
+}
+```
+
+最后，调整一下 gc函数，以适应上面的更改:
+
+```c++
+void gc(VM* vm) {
+
+    // int numObjs = vm->numObjs;
+
+    markAll(vm);
+    sweep(vm);
+
+    vm->maxObjs = vm->numObjs * 2;  // GC阈值更改为当前对象数量的2倍.
+}
+```
+
+这里，我让 阈值随着每次GC后的活动对象数量进行变动~ 因此会自动扩容和收缩..
+
+
+# 0x07 完结
+
+至此，我们构筑了一个简单的垃圾回收器~ 
+
+别看它现在很简陋，它也是一个真正合法的GC呢~ 如果在这个基础上加入大量的优化，就可以接近 Ruby、Lua的GC.
+
+[这里是全部代码](https://github.com/ash-z01)
+
+# 0x08 参考
+
+1. [Book <垃圾回收的算法与实现>](https://book.douban.com/subject/26821357/)
+2. [Site <journal.stuffwithstuff.com>](https://journal.stuffwithstuff.com/2013/12/08/babys-first-garbage-collector/)
 
