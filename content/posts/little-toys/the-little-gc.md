@@ -167,7 +167,7 @@ void push(VM* vm, Object* obj) {
 // 从虚拟机堆栈弹出对象
 Object* pop(VM* vm) {
     assert(vm->stack_size > 0, "stack underflow!");
-    Object* obj = vm->stack[vm->stack_size];
+    Object* obj = vm->stack[vm->stack_size-1];
     vm->stack_size -= 1;
     return obj;
 }
@@ -445,12 +445,10 @@ Object* newObject(VM* vm, ObjectType type) {
 ```c++
 void gc(VM* vm) {
 
-    // int numObjs = vm->numObjs;
-
     markAll(vm);
     sweep(vm);
 
-    vm->maxObjs = vm->numObjs * 2;  // GC阈值更改为当前对象数量的2倍.
+    vm->maxObjs = vm->numObjs == 0 ? GC_THRESHOLD : vm->numObjs * 2;  // GC阈值更改为当前对象数量的2倍.
 }
 ```
 
